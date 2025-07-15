@@ -38,8 +38,8 @@ class ApplicantController extends Controller
             'age' => 'required|integer|min:18|max:100', // Assuming age is between 18 and 100
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Max 2MB for images
             'curriculum_vitae' => 'nullable|mimes:pdf,doc,docx|max:10240', // Max 10MB for documents
-            'working_experience' => 'nullable|string',
-            'educational_attainment' => ['required', Rule::in(['Primary', 'Secondary', 'Vocational', 'Bachelor', 'Master', 'Doctoral'])],
+            // 'working_experience' => 'nullable|string',
+            // 'educational_attainment' => ['required', Rule::in(['Primary', 'Secondary', 'Vocational', 'Bachelor', 'Master', 'Doctoral'])],
             'medical' => ['required', Rule::in(['Pending', 'Fit To Work'])],
             'status' => ['required', Rule::in(['Line Up', 'On Process', 'For Interview', 'For Medical', 'Deployed'])],
         ]);
@@ -68,6 +68,9 @@ class ApplicantController extends Controller
      */
     public function show(Applicant $applicant)
     {
+        $applicant->load(
+            ['educationalAttainments', 'workExperiences', 'references']
+        );
         return view('applicants.show', ['applicant' => $applicant]);
     }
 
@@ -89,8 +92,8 @@ class ApplicantController extends Controller
             'age' => 'required|integer|min:18|max:100',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'curriculum_vitae' => 'nullable|mimes:pdf,doc,docx|max:10240',
-            'working_experience' => 'nullable|string',
-            'educational_attainment' => ['required', Rule::in(['Primary', 'Secondary', 'Vocational', 'Bachelor', 'Master', 'Doctoral'])],
+            // 'working_experience' => 'nullable|string',
+            // 'educational_attainment' => ['required', Rule::in(['Primary', 'Secondary', 'Vocational', 'Bachelor', 'Master', 'Doctoral'])],
             'medical' => ['required', Rule::in(['Pending', 'Fit To Work'])],
             'status' => ['required', Rule::in(['Line Up', 'On Process', 'For Interview', 'For Medical', 'Deployed'])],
         ]);
