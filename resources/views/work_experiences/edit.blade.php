@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Job Opening') }}
+            {{ __('Edit Work Experience') }}
         </h2>
     </x-slot>
 
@@ -9,98 +9,73 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <div class="p-6 text-gray-900">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Job: {{ $job->title }}</h1>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Work Record for
+                        {{ $workExperience->applicant->name }}</h1>
 
-                    <form method="POST" action="{{ route('jobs.update', $job) }}">
+                    <form method="POST" action="{{ route('work-experiences.update', $workExperience) }}"
+                        onsubmit="this.querySelector('button[type=submit]').disabled = true;">
                         @csrf
-                        @method('PUT')
+                        @method('PUT') {{-- Use PUT method for updates --}}
 
-                        {{-- Title --}}
+                        {{-- Company Name --}}
                         <div class="mb-4">
-                            <label for="title" class="block text-sm font-medium text-gray-700">Job Title</label>
-                            <input type="text" name="title" id="title"
+                            <label for="company_name" class="block text-sm font-medium text-gray-700">Company
+                                Name</label>
+                            <input type="text" name="company_name" id="company_name"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                value="{{ old('title', $job->title) }}" required>
-                            @error('title')
+                                value="{{ old('company_name', $workExperience->company_name) }}" required>
+                            @error('company_name')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        {{-- Location --}}
+                        {{-- Role --}}
                         <div class="mb-4">
-                            <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                            <input type="text" name="location" id="location"
+                            <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                            <input type="text" name="role" id="role"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                value="{{ old('location', $job->location) }}" required>
-                            @error('location')
+                                value="{{ old('role', $workExperience->role) }}" required>
+                            @error('role')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        {{-- Description --}}
+                        {{-- Start Year --}}
                         <div class="mb-4">
-                            <label for="description" class="block text-sm font-medium text-gray-700">Job
-                                Description</label>
-                            <textarea name="description" id="description" rows="6"
+                            <label for="start_year" class="block text-sm font-medium text-gray-700">Start Year</label>
+                            <input type="number" name="start_year" id="start_year"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                required>{{ old('description', $job->description) }}</textarea>
-                            @error('description')
+                                value="{{ old('start_year', $workExperience->start_year) }}" required min="1900"
+                                max="{{ date('Y') }}">
+                            @error('start_year')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        {{-- Date Needed --}}
-                        <div class="mb-4">
-                            <label for="date_needed" class="block text-sm font-medium text-gray-700">Date Needed</label>
-                            <input type="date" name="date_needed" id="date_needed"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                value="{{ old('date_needed', $job->date_needed->format('Y-m-d')) }}" required>
-                            @error('date_needed')
-                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        {{-- Date Expiry --}}
-                        <div class="mb-4">
-                            <label for="date_expiry" class="block text-sm font-medium text-gray-700">Date Expiry
-                                (Optional)</label>
-                            <input type="date" name="date_expiry" id="date_expiry"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                value="{{ old('date_expiry', $job->date_expiry ? $job->date_expiry->format('Y-m-d') : '') }}">
-                            @error('date_expiry')
-                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        {{-- Status --}}
+                        {{-- End Year (Optional) --}}
                         <div class="mb-6">
-                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                            <select name="status" id="status"
+                            <label for="end_year" class="block text-sm font-medium text-gray-700">End Year
+                                (Optional)</label>
+                            <input type="number" name="end_year" id="end_year"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                required>
-                                <option value="active" {{ old('status', $job->status) == 'active' ? 'selected' : '' }}>
-                                    Active</option>
-                                <option value="inactive"
-                                    {{ old('status', $job->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                <option value="expired"
-                                    {{ old('status', $job->status) == 'expired' ? 'selected' : '' }}>Expired</option>
-                            </select>
-                            @error('status')
+                                value="{{ old('end_year', $workExperience->end_year) }}" min="1900"
+                                max="{{ date('Y') + 5 }}">
+                            @error('end_year')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="mt-8 flex justify-end space-x-4">
-                            <!-- Back Button -->
-                            <a href="{{ route('jobs.index') }}"
+                            <!-- Cancel Button -->
+                            <a href="{{ route('applicants.show', $workExperience->applicant_id) }}"
                                 class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                                 </svg>
-                                Back to Job Openings
+                                Cancel
                             </a>
 
                             <!-- Save Changes Button -->

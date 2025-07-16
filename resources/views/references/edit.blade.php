@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Job Opening') }}
+            {{ __('Edit Reference') }}
         </h2>
     </x-slot>
 
@@ -9,98 +9,82 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <div class="p-6 text-gray-900">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Job: {{ $job->title }}</h1>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Reference for
+                        {{ $reference->applicant->name }}</h1>
 
-                    <form method="POST" action="{{ route('jobs.update', $job) }}">
+                    <form method="POST" action="{{ route('references.update', $reference) }}"
+                        onsubmit="this.querySelector('button[type=submit]').disabled = true;">
                         @csrf
-                        @method('PUT')
+                        @method('PUT') {{-- Use PUT method for updates --}}
 
-                        {{-- Title --}}
+                        {{-- Name --}}
                         <div class="mb-4">
-                            <label for="title" class="block text-sm font-medium text-gray-700">Job Title</label>
-                            <input type="text" name="title" id="title"
+                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                            <input type="text" name="name" id="name"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                value="{{ old('title', $job->title) }}" required>
-                            @error('title')
+                                value="{{ old('name', $reference->name) }}" required>
+                            @error('name')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        {{-- Location --}}
+                        {{-- Email Address --}}
                         <div class="mb-4">
-                            <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                            <input type="text" name="location" id="location"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                value="{{ old('location', $job->location) }}" required>
-                            @error('location')
-                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        {{-- Description --}}
-                        <div class="mb-4">
-                            <label for="description" class="block text-sm font-medium text-gray-700">Job
-                                Description</label>
-                            <textarea name="description" id="description" rows="6"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                required>{{ old('description', $job->description) }}</textarea>
-                            @error('description')
-                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        {{-- Date Needed --}}
-                        <div class="mb-4">
-                            <label for="date_needed" class="block text-sm font-medium text-gray-700">Date Needed</label>
-                            <input type="date" name="date_needed" id="date_needed"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                value="{{ old('date_needed', $job->date_needed->format('Y-m-d')) }}" required>
-                            @error('date_needed')
-                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        {{-- Date Expiry --}}
-                        <div class="mb-4">
-                            <label for="date_expiry" class="block text-sm font-medium text-gray-700">Date Expiry
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email Address
                                 (Optional)</label>
-                            <input type="date" name="date_expiry" id="date_expiry"
+                            <input type="email" name="email" id="email"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                value="{{ old('date_expiry', $job->date_expiry ? $job->date_expiry->format('Y-m-d') : '') }}">
-                            @error('date_expiry')
+                                value="{{ old('email', $reference->email) }}">
+                            @error('email')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        {{-- Status --}}
-                        <div class="mb-6">
-                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                            <select name="status" id="status"
+                        {{-- Phone Number --}}
+                        <div class="mb-4">
+                            <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number
+                                (Optional)</label>
+                            <input type="text" name="phone_number" id="phone_number"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                required>
-                                <option value="active" {{ old('status', $job->status) == 'active' ? 'selected' : '' }}>
-                                    Active</option>
-                                <option value="inactive"
-                                    {{ old('status', $job->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                <option value="expired"
-                                    {{ old('status', $job->status) == 'expired' ? 'selected' : '' }}>Expired</option>
-                            </select>
-                            @error('status')
+                                value="{{ old('phone_number', $reference->phone_number) }}">
+                            @error('phone_number')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Company --}}
+                        <div class="mb-4">
+                            <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
+                            <input type="text" name="company" id="company"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                value="{{ old('company', $reference->company) }}" required>
+                            @error('company')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Role --}}
+                        <div class="mb-6">
+                            <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                            <input type="text" name="role" id="role"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                value="{{ old('role', $reference->role) }}" required>
+                            @error('role')
                                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="mt-8 flex justify-end space-x-4">
-                            <!-- Back Button -->
-                            <a href="{{ route('jobs.index') }}"
+                            <!-- Cancel Button -->
+                            <a href="{{ route('applicants.show', $reference->applicant_id) }}"
                                 class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                                 </svg>
-                                Back to Job Openings
+                                Cancel
                             </a>
 
                             <!-- Save Changes Button -->
